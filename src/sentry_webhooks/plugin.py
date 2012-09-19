@@ -70,5 +70,5 @@ class WebHooksPlugin(Plugin):
             return
 
         data = simplejson.dumps(self.get_group_data(group, event))
-        for url in self.get_webook_urls():
+        for url in self.get_webhook_urls(group.project):
             safe_execute(self.send_webhook, url, data)
