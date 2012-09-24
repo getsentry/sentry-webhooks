@@ -1,7 +1,7 @@
 sentry-webhooks
 ===============
 
-An extension for Sentry which allows creation various web hooks.
+An extension for Sentry that adds support for creating various web hooks.
 
 Install
 -------
@@ -15,7 +15,7 @@ You can now configure webhooks via the plugin configuration panel within your pr
 Callback Receivers
 ------------------
 
-Your callback will recive a POST request whenever the is a new event, with the following data
+Your callback will recive a POST request whenever there is a new event, with the following data
 as JSON:
 
 ::
