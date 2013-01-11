@@ -46,6 +46,7 @@ class WebHooksPlugin(Plugin):
             'id': str(group.id),
             'checksum': group.checksum,
             'project': group.project.slug,
+            'project_name': group.project.name,
             'logger': group.logger,
             'level': group.get_level_display(),
             'culprit': group.culprit,
