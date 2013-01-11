@@ -42,7 +42,11 @@ class WebHooksPlugin(Plugin):
         return bool(self.get_option('urls', project))
 
     def get_group_data(self, group, event):
-        return {
+        if event.data:
+            data = event.data.copy()
+        else:
+            data = {}
+        data.update({
             'id': str(group.id),
             'checksum': group.checksum,
             'project': group.project.slug,
@@ -51,7 +55,8 @@ class WebHooksPlugin(Plugin):
             'level': group.get_level_display(),
             'culprit': group.culprit,
             'message': event.message,
-        }
+        })
+        return data
 
     def get_webhook_urls(self, project):
         return filter(bool, self.get_option('urls', project).strip().splitlines())
