@@ -17,7 +17,7 @@ import urllib2
 
 
 class WebHooksOptionsForm(forms.Form):
-    urls = forms.CharField(label=_('Repository Name'),
+    urls = forms.CharField(label=_('Callback URLs'),
         widget=forms.Textarea(attrs={'class': 'span6', 'placeholder': 'https://getsentry.com/callback/url'}),
         help_text=_('Enter callback URLs to POST new events to (one per line).'))
 
