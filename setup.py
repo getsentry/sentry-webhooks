@@ -38,10 +38,10 @@ setup(
     include_package_data=True,
     entry_points={
        'sentry.apps': [
-            'github = sentry_webhooks',
+            'webhooks = sentry_webhooks',
         ],
        'sentry.plugins': [
-            'github = sentry_webhooks.plugin:WebHooksPlugin'
+            'webhooks = sentry_webhooks.plugin:WebHooksPlugin'
         ],
     },
     classifiers=[
