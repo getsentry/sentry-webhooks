@@ -51,6 +51,7 @@ class WebHooksPlugin(Plugin):
             'level': group.get_level_display(),
             'culprit': group.culprit,
             'message': event.message,
+            'url': group.get_absolute_url(),
         }
         data['event'] = event.data or {}
         return data
