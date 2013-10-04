@@ -15,7 +15,7 @@ You can now configure webhooks via the plugin configuration panel within your pr
 Callback Receivers
 ------------------
 
-Your callback will recive a POST request whenever there is a new event, with the following data
+Your callback will receive a POST request whenever there is a new event, with the following data
 as JSON:
 
 ::
