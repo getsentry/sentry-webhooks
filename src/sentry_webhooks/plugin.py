@@ -53,7 +53,7 @@ class WebHooksPlugin(Plugin):
             'message': event.message,
             'url': group.get_absolute_url(),
         }
-        data['event'] = event.data or {}
+        data['event'] = dict(event.data or {})
         return data
 
     def get_webhook_urls(self, project):
@@ -73,6 +73,6 @@ class WebHooksPlugin(Plugin):
         if not self.is_configured(group.project):
             return
 
-        data = simplejson.dumps(dict(self.get_group_data(group, event)))
+        data = simplejson.dumps(self.get_group_data(group, event))
         for url in self.get_webhook_urls(group.project):
             safe_execute(self.send_webhook, url, data)
