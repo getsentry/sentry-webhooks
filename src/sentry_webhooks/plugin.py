@@ -106,7 +106,7 @@ class WebHooksPlugin(Plugin):
         req.add_header('User-Agent', 'sentry-webhooks/%s' % self.version)
         req.add_header('Content-Type', 'application/json')
         opener = urllib2.build_opener(NoRedirection)
-        resp = opener.urlopen(req, timeout=self.timeout)
+        resp = opener.open(req, timeout=self.timeout)
         return resp
 
     def post_process(self, group, event, is_new, is_sample, **kwargs):
