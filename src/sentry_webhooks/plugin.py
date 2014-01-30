@@ -34,9 +34,9 @@ DISALLOWED_IPS = map(
 
 def is_valid_url(url):
     parsed = urlparse(url)
-    addr = ipaddr.IPNetwork(socket.gethostbyname(parsed.hostname))
+    ip_network = ipaddr.IPNetwork(socket.gethostbyname(parsed.hostname))
     for addr in DISALLOWED_IPS:
-        if parsed.hostname in addr:
+        if ip_network in addr:
             return False
     return True
 
