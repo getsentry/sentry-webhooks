@@ -6,6 +6,7 @@ sentry_webhooks.plugin
 :license: BSD, see LICENSE for more details.
 """
 
+import logging
 import ipaddr
 import sentry_webhooks
 import socket
@@ -31,6 +32,15 @@ DISALLOWED_IPS = map(
 )
 
 
+def is_valid_url(url):
+    parsed = urlparse(url)
+    addr = ipaddr.ip_network(socket.gethostbyname(parsed.hostname))
+    for addr in DISALLOWED_IPS:
+        if parsed.hostname in addr:
+            return False
+    return True
+
+
 class NoRedirection(urllib2.HTTPErrorProcessor):
     def http_response(self, request, response):
         return response
@@ -47,10 +57,7 @@ class WebHooksOptionsForm(forms.Form):
 
     def clean_url(self):
         value = self.cleaned_data.get('url')
-        parsed = urlparse(value)
-        addr = ipaddr.ip_network(socket.gethostbyname(parsed.hostname))
-        for addr in DISALLOWED_IPS:
-            if value.hostname in ipaddr:
+        if not is_valid_url(value):
                 raise forms.ValidationError('Invalid hostname')
         return value
 
@@ -71,6 +78,7 @@ class WebHooksPlugin(Plugin):
     conf_key = 'webhooks'
     project_conf_form = WebHooksOptionsForm
     timeout = getattr(settings, 'SENTRY_WEBHOOK_TIMEOUT', 3)
+    logger = logging.getLogger('sentry.plugins.webhooks')
 
     def is_configured(self, project, **kwargs):
         return bool(self.get_option('urls', project))
@@ -110,4 +118,8 @@ class WebHooksPlugin(Plugin):
 
         data = simplejson.dumps(self.get_group_data(group, event))
         for url in self.get_webhook_urls(group.project):
+            if not is_valid_url(url):
+                self.logger.error('URL is not valid: %s', url)
+                continue
+
             safe_execute(self.send_webhook, url, data)
