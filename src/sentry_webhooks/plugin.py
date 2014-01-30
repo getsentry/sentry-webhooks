@@ -6,14 +6,16 @@ sentry_webhooks.plugin
 :license: BSD, see LICENSE for more details.
 """
 
-from django import forms
-from django.utils import simplejson
-from sentry.utils.safe import safe_execute
-from django.utils.translation import ugettext_lazy as _
-from sentry.plugins import Plugin
-
 import sentry_webhooks
 import urllib2
+
+from django.conf import settings
+from django import forms
+from django.utils import simplejson
+from django.utils.translation import ugettext_lazy as _
+
+from sentry.plugins import Plugin
+from sentry.utils.safe import safe_execute
 
 
 class WebHooksOptionsForm(forms.Form):
@@ -37,6 +39,7 @@ class WebHooksPlugin(Plugin):
     conf_title = title
     conf_key = 'webhooks'
     project_conf_form = WebHooksOptionsForm
+    timeout = getattr(settings, 'SENTRY_WEBHOOK_TIMEOUT', 3)
 
     def is_configured(self, project, **kwargs):
         return bool(self.get_option('urls', project))
@@ -63,7 +66,7 @@ class WebHooksPlugin(Plugin):
         req = urllib2.Request(url, data)
         req.add_header('User-Agent', 'sentry-webhooks/%s' % self.version)
         req.add_header('Content-Type', 'application/json')
-        resp = urllib2.urlopen(req)
+        resp = urllib2.urlopen(req, timeout=self.timeout)
         return resp
 
     def post_process(self, group, event, is_new, is_sample, **kwargs):
