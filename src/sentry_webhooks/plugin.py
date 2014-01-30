@@ -18,6 +18,13 @@ from sentry.plugins import Plugin
 from sentry.utils.safe import safe_execute
 
 
+class NoRedirection(urllib2.HTTPErrorProcessor):
+    def http_response(self, request, response):
+        return response
+
+    https_response = http_response
+
+
 class WebHooksOptionsForm(forms.Form):
     urls = forms.CharField(label=_('Callback URLs'),
         widget=forms.Textarea(attrs={'class': 'span6', 'placeholder': 'https://getsentry.com/callback/url'}),
@@ -66,7 +73,8 @@ class WebHooksPlugin(Plugin):
         req = urllib2.Request(url, data)
         req.add_header('User-Agent', 'sentry-webhooks/%s' % self.version)
         req.add_header('Content-Type', 'application/json')
-        resp = urllib2.urlopen(req, timeout=self.timeout)
+        opener = urllib2.build_opener(NoRedirection)
+        resp = opener.urlopen(req, timeout=self.timeout)
         return resp
 
     def post_process(self, group, event, is_new, is_sample, **kwargs):
