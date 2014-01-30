@@ -23,7 +23,7 @@ from sentry.utils.safe import safe_execute
 
 
 DISALLOWED_IPS = map(
-    ipaddr.ip_network,
+    ipaddr.IPNetwork,
     getattr(settings, 'SENTRY_WEBHOOK_DISALLOWED_IPS', (
         '10.0.0.0/8',
         '172.16.0.0/12',
@@ -34,7 +34,7 @@ DISALLOWED_IPS = map(
 
 def is_valid_url(url):
     parsed = urlparse(url)
-    addr = ipaddr.ip_network(socket.gethostbyname(parsed.hostname))
+    addr = ipaddr.IPNetwork(socket.gethostbyname(parsed.hostname))
     for addr in DISALLOWED_IPS:
         if parsed.hostname in addr:
             return False
