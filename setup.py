@@ -16,6 +16,7 @@ tests_require = [
 ]
 
 install_requires = [
+    'ipaddr',
     'sentry>=5.0.0',
 ]
 

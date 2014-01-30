@@ -6,16 +6,29 @@ sentry_webhooks.plugin
 :license: BSD, see LICENSE for more details.
 """
 
+import ipaddr
 import sentry_webhooks
+import socket
 import urllib2
 
 from django.conf import settings
 from django import forms
 from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
+from urlparse import urlparse
 
 from sentry.plugins import Plugin
 from sentry.utils.safe import safe_execute
+
+
+DISALLOWED_IPS = map(
+    ipaddr.ip_network,
+    getattr(settings, 'SENTRY_WEBHOOK_DISALLOWED_IPS', (
+        '10.0.0.0/8',
+        '172.16.0.0/12',
+        '192.168.0.0/16',
+    )),
+)
 
 
 class NoRedirection(urllib2.HTTPErrorProcessor):
@@ -26,9 +39,20 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
 
 
 class WebHooksOptionsForm(forms.Form):
-    urls = forms.CharField(label=_('Callback URLs'),
-        widget=forms.Textarea(attrs={'class': 'span6', 'placeholder': 'https://getsentry.com/callback/url'}),
+    urls = forms.CharField(
+        label=_('Callback URLs'),
+        widget=forms.Textarea(attrs={
+            'class': 'span6', 'placeholder': 'https://getsentry.com/callback/url'}),
         help_text=_('Enter callback URLs to POST new events to (one per line).'))
+
+    def clean_url(self):
+        value = self.cleaned_data.get('url')
+        parsed = urlparse(value)
+        addr = ipaddr.ip_network(socket.gethostbyname(parsed.hostname))
+        for addr in DISALLOWED_IPS:
+            if value.hostname in ipaddr:
+                raise forms.ValidationError('Invalid hostname')
+        return value
 
 
 class WebHooksPlugin(Plugin):
