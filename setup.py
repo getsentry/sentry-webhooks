@@ -11,18 +11,13 @@ An extension for Sentry which allows creation various web hooks.
 from setuptools import setup, find_packages
 
 
-tests_require = [
-    'nose',
-]
-
 install_requires = [
-    'ipaddr',
-    'sentry>=5.0.0',
+    # 'sentry>=7.0.0',
 ]
 
 setup(
     name='sentry-webhooks',
-    version='0.2.0',
+    version='0.3.0',
     author='David Cramer',
     author_email='dcramer@gmail.com',
     url='http://github.com/getsentry/sentry-webhooks',
@@ -33,9 +28,6 @@ setup(
     packages=find_packages('src'),
     zip_safe=False,
     install_requires=install_requires,
-    tests_require=tests_require,
-    extras_require={'test': tests_require},
-    test_suite='runtests.runtests',
     include_package_data=True,
     entry_points={
        'sentry.apps': [
