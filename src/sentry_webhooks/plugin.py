@@ -74,7 +74,7 @@ class WebHooksPlugin(NotificationPlugin):
         urls = self.get_option('urls', project)
         if not urls:
             return ()
-        return filter(urls.strip().splitlines())
+        return filter(bool, urls.strip().splitlines())
 
     def send_webhook(self, url, data):
         return safe_urlopen(
