@@ -21,10 +21,32 @@ as JSON:
 ::
 
     {
-        'id': '134343',
-        'project': 'project-slug',
-        'message': 'This is an example',
-        'culprit': 'foo.bar.baz',
-        'logger': 'root',
-        'level': 'error'
+      "id": "27379932",
+      "project": "project-slug",
+      "project_name": "Project Name",
+      "culprit": "raven.scripts.runner in main",
+      "level": "error",
+      "url": "https://app.getsentry.com/getsentry/project-slug/group/27379932/",
+      "checksum": "c4a4d06bc314205bb3b6bdb612dde7f1",
+      "logger": "root",
+      "message": "This is an example Python exception",
+      "event": {
+        "extra": {},
+        "sentry.interfaces.Stacktrace": {
+          "frames": [
+            {
+              // stacktrace information
+            }
+          ]
+        },
+        "tags": [
+          ["foo", "bar"],
+        ],
+        "sentry.interfaces.User": {
+          // user information
+        },
+        "sentry.interfaces.Http": {
+          // HTTP request information
+        }
+      }
     }
