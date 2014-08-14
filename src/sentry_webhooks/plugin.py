@@ -82,6 +82,7 @@ class WebHooksPlugin(NotificationPlugin):
             data=data,
             timeout=self.timeout,
             user_agent=self.user_agent,
+            headers=(('Accept-Encoding', 'gzip'), ('Content-type', 'application/json')),
         )
 
     def notify_users(self, group, event, fail_silently=False):
