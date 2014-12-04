@@ -14,12 +14,12 @@ from django import forms
 from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
 
-from sentry.plugins.bases.notify import NotificationPlugin
+from sentry.plugins.bases import notify
 from sentry.http import safe_urlopen, is_valid_url
 from sentry.utils.safe import safe_execute
 
 
-class WebHooksOptionsForm(forms.Form):
+class WebHooksOptionsForm(notify.NotificationConfigurationForm):
     urls = forms.CharField(
         label=_('Callback URLs'),
         widget=forms.Textarea(attrs={
@@ -33,7 +33,7 @@ class WebHooksOptionsForm(forms.Form):
         return value
 
 
-class WebHooksPlugin(NotificationPlugin):
+class WebHooksPlugin(notify.NotificationPlugin):
     author = 'Sentry Team'
     author_url = 'https://github.com/getsentry/sentry'
     version = sentry_webhooks.VERSION
