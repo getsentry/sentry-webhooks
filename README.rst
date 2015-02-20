@@ -3,6 +3,8 @@ sentry-webhooks
 
 An extension for Sentry that adds support for creating various web hooks.
 
+**This extension is now bundled as part of Sentry 7.3.0 and is no longer maintained**
+
 Install
 -------
 
